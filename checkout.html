@@ -14,16 +14,24 @@
   @keyframes pulse { 0%,100% { opacity: .25; } 50% { opacity: 1; } }
   a { color: #1d9bf0; font-weight: 700; text-decoration: none; }
 </style>
-<script src="https://cdn.paddle.com/paddle.js"></script>
+<script src="https://cdn.paddle.com/paddle/paddle.js"></script>
 <script>
-  Paddle.Initialize({
-    token: 'live_071fe304a315a76031df6114c2c',
-    eventCallback: function (event) {
-      if (event && event.name === 'checkout.completed') {
-        window.location.href = 'https://license.xiaonezha.shop/claim';
-      }
+  function openCheckout() {
+    var m = /[?&]_ptxn=([^&]+)/.exec(window.location.search);
+    if (m && window.Paddle) {
+      Paddle.Checkout.open({ transactionId: decodeURIComponent(m[1]) });
     }
-  });
+  }
+  if (window.Paddle) {
+    Paddle.Initialize({
+      token: 'live_071fe304a315a76031df6114c2c',
+      eventCallback: function (event) {
+        if (event && event.name === 'checkout.completed') {
+          window.location.href = 'https://license.xiaonezha.shop/claim';
+        }
+      }
+    });
+  }
 </script>
 </head>
 <body>
@@ -32,6 +40,7 @@
     <div class="spin">●</div>
     <h1>正在打开安全结账…</h1>
     <p>Opening secure checkout…<br>付款完成后会自动跳转到领取授权码页面。<br>After payment you will be redirected to claim your license key.</p>
+    <p><a href="#" onclick="openCheckout(); return false;" style="font-size:16px">点此打开结账 · Open checkout</a></p>
     <p style="font-size:13.5px">结账窗口没有弹出？请确认浏览器未拦截弹窗，或返回 <a href="https://license.xiaonezha.shop/buy">购买页</a> 重试。</p>
   </div>
 </div>
