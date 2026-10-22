@@ -22,7 +22,23 @@
       Paddle.Checkout.open({ transactionId: decodeURIComponent(m[1]) });
     }
   }
+  window._dbgQ = [];
+  function dbg(msg) {
+    var el = document.getElementById('debug');
+    if (el) { el.textContent += msg + '\n'; } else { window._dbgQ.push(msg); }
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var el = document.getElementById('debug');
+    if (el && window._dbgQ.length) { el.textContent += window._dbgQ.join('\n') + '\n'; window._dbgQ = []; }
+  });
+  function openCheckoutB() {
+    try {
+      Paddle.Checkout.open({ items: [{ priceId: 'pri_01m5gmbfaas0nr25s6wv45g9yw', quantity: 1 }] });
+      dbg('OPEN-B CALLED');
+    } catch (e) { dbg('OPEN-B ERROR :: ' + e.message); }
+  }
   if (window.Paddle) {
+    try {
     Paddle.Initialize({
       token: 'live_071fe304a315a76031df6114c2c',
       eventCallback: function (event) {
@@ -37,6 +53,10 @@
         }
       }
     });
+    dbg('INIT OK');
+    } catch (e) { dbg('INIT ERROR :: ' + e.message); }
+  } else {
+    window.addEventListener('load', function () { dbg('NO PADDLE OBJECT'); });
   }
 </script>
 </head>
@@ -47,6 +67,7 @@
     <h1>正在打开安全结账…</h1>
     <p>Opening secure checkout…<br>付款完成后会自动跳转到领取授权码页面。<br>After payment you will be redirected to claim your license key.</p>
     <p><a href="#" onclick="openCheckout(); return false;" style="font-size:16px">点此打开结账 · Open checkout</a></p>
+    <p><a href="#" onclick="openCheckoutB(); return false;" style="font-size:16px">测试B · 按价格打开结账</a></p>
     <pre id="debug" style="text-align:left;font-size:11px;white-space:pre-wrap;color:#a00;max-width:640px;margin:16px auto"></pre>
     <p style="font-size:13.5px">结账窗口没有弹出？请确认浏览器未拦截弹窗，或返回 <a href="https://license.xiaonezha.shop/buy">购买页</a> 重试。</p>
   </div>
