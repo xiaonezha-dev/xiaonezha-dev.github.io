@@ -1,18 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Checkout — Unfollow Manager for X Pro</title>
+<title>安全结账 · Unfollow Manager for X</title>
 <style>
-  body { margin: 0; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #faf3e6; color: #2b2118; }
-  .wrap { max-width: 560px; margin: 0 auto; padding: 60px 20px; text-align: center; }
-  .card { background: #fffdf8; border: 1px solid #eee0c8; border-radius: 16px; padding: 36px 28px; box-shadow: 0 10px 30px rgba(120,90,30,.07); }
-  h1 { font-size: 22px; margin: 0 0 10px; }
-  p { color: #8a7a63; line-height: 1.8; font-size: 15px; }
-  .spin { font-size: 26px; animation: pulse 1s infinite; }
-  @keyframes pulse { 0%,100% { opacity: .25; } 50% { opacity: 1; } }
-  a { color: #1d9bf0; font-weight: 700; text-decoration: none; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: #faf6ef; color: #20180e;
+         display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+  .box { text-align: center; padding: 24px; max-width: 520px; }
+  a { color: #9a7b24; }
 </style>
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <script>
@@ -22,55 +18,25 @@
       Paddle.Checkout.open({ transactionId: decodeURIComponent(m[1]) });
     }
   }
-  window._dbgQ = [];
-  function dbg(msg) {
-    var el = document.getElementById('debug');
-    if (el) { el.textContent += msg + '\n'; } else { window._dbgQ.push(msg); }
-  }
-  document.addEventListener('DOMContentLoaded', function () {
-    var el = document.getElementById('debug');
-    if (el && window._dbgQ.length) { el.textContent += window._dbgQ.join('\n') + '\n'; window._dbgQ = []; }
-  });
-  function openCheckoutB() {
-    try {
-      Paddle.Checkout.open({ items: [{ priceId: 'pri_01m5gmbfaas0nr25s6wv45g9yw', quantity: 1 }] });
-      dbg('OPEN-B CALLED');
-    } catch (e) { dbg('OPEN-B ERROR :: ' + e.message); }
-  }
   if (window.Paddle) {
-    try {
     Paddle.Initialize({
       token: 'live_071fe304a315a76031df6114c2c',
       eventCallback: function (event) {
-        try {
-          var el = document.getElementById('debug');
-          if (el && event) {
-            el.textContent += event.name + ' :: ' + JSON.stringify(event.data || event.error || {}) + '\n';
-          }
-        } catch (e) {}
         if (event && event.name === 'checkout.completed') {
           window.location.href = 'https://license.xiaonezha.shop/claim';
         }
       }
     });
-    dbg('INIT OK');
-    } catch (e) { dbg('INIT ERROR :: ' + e.message); }
-  } else {
-    window.addEventListener('load', function () { dbg('NO PADDLE OBJECT'); });
   }
 </script>
 </head>
 <body>
-<div class="wrap">
-  <div class="card">
-    <div class="spin">●</div>
-    <h1>正在打开安全结账…</h1>
-    <p>Opening secure checkout…<br>付款完成后会自动跳转到领取授权码页面。<br>After payment you will be redirected to claim your license key.</p>
+  <div class="box">
+    <h2>正在打开安全结账…</h2>
+    <p>Opening secure checkout…</p>
+    <p>付款完成后会自动跳转到领取授权码页面。<br>After payment you will be redirected to claim your license key.</p>
     <p><a href="#" onclick="openCheckout(); return false;" style="font-size:16px">点此打开结账 · Open checkout</a></p>
-    <p><a href="#" onclick="openCheckoutB(); return false;" style="font-size:16px">测试B · 按价格打开结账</a></p>
-    <pre id="debug" style="text-align:left;font-size:11px;white-space:pre-wrap;color:#a00;max-width:640px;margin:16px auto"></pre>
     <p style="font-size:13.5px">结账窗口没有弹出？请确认浏览器未拦截弹窗，或返回 <a href="https://license.xiaonezha.shop/buy">购买页</a> 重试。</p>
   </div>
-</div>
 </body>
 </html>
